@@ -59,7 +59,7 @@ class TableViewController: UITableViewController, NSFetchedResultsControllerDele
         
         
         let fetchRequest: NSFetchRequest<User> = User.fetchRequest()
-        let sortDescriptor = NSSortDescriptor(key: "name", ascending: true)
+        let sortDescriptor = NSSortDescriptor(key: #keyPath(User.firstName), ascending: true)
         fetchRequest.fetchLimit = 15
         fetchRequest.sortDescriptors = [sortDescriptor]
         
@@ -76,7 +76,8 @@ class TableViewController: UITableViewController, NSFetchedResultsControllerDele
 
     @IBAction func addPressed(_ sender: Any) {
         let user = User(context: persistentContainer.viewContext)
-        user.name = "Name \(Int.random(in: 0..<Int.max))"
+        user.firstName = "Name \(Int.random(in: 0..<Int.max))"
+        user.avatar = UIImage(named: "image1")
         let book = Book(context: persistentContainer.viewContext)
         book.name = "SomeBook"
         user.book = book
@@ -114,8 +115,9 @@ class TableViewController: UITableViewController, NSFetchedResultsControllerDele
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         let user = fetchResultController.object(at: indexPath)
-        cell.textLabel?.text = user.name
+        cell.textLabel?.text = user.firstName
         cell.detailTextLabel?.text = user.book?.name
+        cell.imageView?.image = user.avatar
         return cell
     }
     
